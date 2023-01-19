@@ -1,0 +1,3 @@
+/home/nathan/Desktop/IG3DA/CMakeFiles/test.dir
+/home/nathan/Desktop/IG3DA/CMakeFiles/edit_cache.dir
+/home/nathan/Desktop/IG3DA/CMakeFiles/rebuild_cache.dir
