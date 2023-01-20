@@ -4,10 +4,11 @@
 #include <stdio.h>
 #include <vector>
 #include <sstream>
-#include <GL/glew.h>
-#include <GL/glfw3.h>
-#include <glm/glm.hpp>
-using namespace glm;
+// #include <GL/glew.h>
+// #include <GL/glfw3.h>
+// #include <glm/glm.hpp>
+#include <math.h>
+// using namespace glm;
 using namespace cv;
 using namespace std;
 
@@ -47,7 +48,7 @@ bool appartient(vector<vector<Point>> list, Point elem){
 }
 
 int main(){
-    Mat I = imread("pot.jpg",1);
+    Mat I = imread("../pot.jpg",1);
     if (I.empty()) {
         cout << "Image File " << "Not Found" << endl;
         // wait for any key press
@@ -70,7 +71,8 @@ int main(){
     namedWindow("contour");
     imshow("contour", thresh);
 
-    vector
+    int pt_ellipse = 20;
+    vector<Point3f> pts;
     waitKey(0);
     Point center;
     Size axes;
@@ -78,12 +80,17 @@ int main(){
         cout<<points<<endl;
         center = Point((points[0].x+points[1].x)/2,points[0].y);
         axes = Size((points[1].x-points[0].x)/2, points[2].y-points[0].y);
+        for (int theta=0; theta < pt_ellipse; theta++){
+
+            pts.push_back(Point3f(cos(theta*(2*M_PI/pt_ellipse)),0,sin(theta*(2*M_PI/pt_ellipse))));
+        }
         ellipse(I, center, axes, 0, 0, 360, Scalar(0,255,255), 2, LINE_AA);
         // fillPoly(I,points,Scalar(255, 255, 255));
         imshow("output", I);
     }
     waitKey(0);
 
+    float r = axes.width;
     int num_profile = 60;
     if (points.size()==4){
         Point A = Point(points[0].x,center.y);
@@ -111,10 +118,14 @@ int main(){
             center.x = (B.x+A.x)/2;
             cout<<axes.width<<endl;
             axes = Size((B.x-A.x)/2, axes.height);
+            for (int theta=0;theta < pt_ellipse;theta++){
+                pts.push_back(Point3f((axes.width/r)*cos(theta*(2*M_PI/pt_ellipse)),center.y,(axes.width/r)*sin(theta*(2*M_PI/pt_ellipse))));
+            }
             ellipse(I, center, axes, 0, 0, 360, Scalar(0,255,255), 2, LINE_AA);
             imshow("output", I);
         }
     }
+    cout<<pts[50]<<endl;
 
     waitKey(0);
 
